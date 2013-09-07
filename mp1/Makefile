@@ -23,7 +23,7 @@ SERVER_OBJ_G=$(SERVER_OBJ:.o=.o-g)
 SERVER=dgrepd
 
 CLIENT_SRC=$(SRC)
-CLIENT_SRC+=client_main.cpp
+CLIENT_SRC+=client_main.cpp client.cpp
 CLIENT_HDR=$(CLIENT_SRC:.cpp=.h)
 _CLIENT_OBJ=$(CLIENT_SRC:.cpp=.o) 
 CLIENT_OBJ=$(_CLIENT_OBJ:%=$(ODIR)/%)
@@ -65,10 +65,10 @@ dgrepd-g:$(SERVER_OBJ_G)
 	$(CC) $(LDFLAGS) -o $(SERVER)-g $(SERVER_OBJ_G)
 
 dgrep:$(CLIENT_OBJ)
-	$(CC) $(LDFLAGS) -o $(SERVER) $(SERVER_OBJ)
+	$(CC) $(LDFLAGS) -o $(CLIENT) $(CLIENT_OBJ)
 
 dgrep-g:$(CLIENT_OBJ_G)
-	$(CC) $(LDFLAGS) -o $(SERVER)-g $(SERVER_OBJ_G)
+	$(CC) $(LDFLAGS) -o $(CLIENT)-g $(CLIENT_OBJ_G)
 
 unittest:$(UNITTEST_OBJ)
 	$(CC) $(LDFLAGS) -o $(UNITTEST) $(UNITTEST_OBJ)

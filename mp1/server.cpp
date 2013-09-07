@@ -5,12 +5,12 @@
 
 Server::Server(boost::asio::io_service& io_service)
           : acceptor_(io_service, tcp::endpoint(tcp::v4(), Server::LISTEN_PORT)) {
+  std::cout << "Listening on port " << LISTEN_PORT << std::endl;
   start_accept();
 }
 
 void Server::start_accept()
 {
-  std::cout << "Listening on port " << LISTEN_PORT << std::endl;
   TcpConnPtr new_connection =
     TcpConnection::create(acceptor_.get_io_service());
 
@@ -24,7 +24,9 @@ void Server::handle_accept(TcpConnPtr new_connection,
 {
   if (!error) {
     // do the real job here
+    std::cout << "start" << std::endl;
     new_connection->start();
+    std::cout << "end" << std::endl;
   }
 
   start_accept();
