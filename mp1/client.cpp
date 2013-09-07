@@ -20,14 +20,19 @@ Client::Client (std::string pattern,
 // upon connection, send the pattern to server
 void Client::handle_connect(const boost::system::error_code& error)
 {
-  std::cout << "handle_connect\n";
   if (!error) {
+
+    Message msg;
+    msg.body_length(pattern_.length());
+    memcpy(msg.body(), pattern_.c_str(), msg.body_length());
+    msg.encode_header();
+    
     boost::asio::async_write(socket_,
-        boost::asio::buffer(pattern_),
+        boost::asio::buffer(msg.data(), msg.length()),
         boost::bind(&Client::handle_read, this,
           boost::asio::placeholders::error));
   } else {
-    std::cout << "Error!" << std::endl;
+    std::cout << "Error in handle_connect!\n";
     do_close();
   }
 }
@@ -36,6 +41,7 @@ void Client::handle_connect(const boost::system::error_code& error)
 void Client::handle_read(const boost::system::error_code& error) {
   if (!error) {
     boost::system::error_code e;
+    char buffer[MAX_LENGTH];
     socket_.read_some(boost::asio::buffer(buffer), e);
     if (e == boost::asio::error::eof)
       do_close(); // Connection closed cleanly by peer.
@@ -54,12 +60,12 @@ void Client::handle_read(const boost::system::error_code& error) {
 }
 
 void Client::handle_output(const boost::system::error_code& error) {
-  if (!error) {
-    std::cout << "Result is:\n" << buffer << std::endl;
-  } else {
-    std::cout << "Error!" << std::endl;
-    do_close();
-  }
+  // if (!error) {
+  //   std::cout << "Result is:\n" << buffer << std::endl;
+  // } else {
+  //   std::cout << "Error!" << std::endl;
+  //   do_close();
+  // }
 }
 
 void Client::close() {

@@ -8,6 +8,7 @@
 using boost::asio::ip::tcp;
 
 #include "types.h"
+#include "message.h"
 
 class TcpConnection
   : public boost::enable_shared_from_this<TcpConnection> {
@@ -32,8 +33,15 @@ private:
       size_t /*bytes_transferred*/) {
   }
 
+  std::string do_grep(const std::string& pattern); 
+
+  void handle_read_header(const boost::system::error_code& error);
+  void handle_read_body(const boost::system::error_code& error);
+
   tcp::socket socket_;
-  std::string message_;
+
+  Message pattern_;
+  Message result_;
 };
 
 #endif /* end of include guard: _TCP_CONNECTION_H_ */

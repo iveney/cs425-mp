@@ -12,7 +12,7 @@ endif
 ODIR=obj
 
 # shared source files
-SRC=
+SRC=message.cpp
 
 SERVER_SRC=$(SRC)
 SERVER_SRC+=server_main.cpp server.cpp tcp_connection.cpp

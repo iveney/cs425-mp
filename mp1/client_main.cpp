@@ -33,8 +33,7 @@ int main(int argc, char *argv[]) {
 
     std::string fn("TODO");
     Client client(fn, io_service, iterator);
-    client.close();
-
+    io_service.run();
   } catch (std::exception& e) {
     std::cerr << e.what() << std::endl;
   }

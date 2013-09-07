@@ -5,6 +5,8 @@
 #include <boost/asio.hpp>
 using boost::asio::ip::tcp;
 
+#include "message.h"
+
 class Client {
 public:
   enum { MAX_LENGTH = 8192 };
@@ -19,12 +21,11 @@ private:
   void handle_read(const boost::system::error_code& error);
   void handle_output(const boost::system::error_code& error);
   void do_close();
+
   std::string pattern_;
+
   boost::asio::io_service& io_service_;
   tcp::socket socket_;
-
-  // TODO: implement a class that encapsulates the result. Basically a buffer
-  char buffer[MAX_LENGTH];
 };
 
 #endif /* end of include guard: _CLIENT_H_ */

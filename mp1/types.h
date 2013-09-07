@@ -6,6 +6,7 @@ class TcpConnection;
 typedef boost::shared_ptr<TcpConnection> TcpConnPtr;
 
 class Server;
+class Message;
 
 #endif /* end of include guard: _TYPES_H_ */
 
