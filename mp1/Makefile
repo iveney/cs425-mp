@@ -15,7 +15,7 @@ ODIR=obj
 SRC=
 
 SERVER_SRC=$(SRC)
-SERVER_SRC+=server_main.cpp server.cpp
+SERVER_SRC+=server_main.cpp server.cpp tcp_connection.cpp
 SERVER_HDR=$(SERVER_SRC:.cpp=.h)
 _SERVER_OBJ=$(SERVER_SRC:.cpp=.o) 
 SERVER_OBJ=$(_SERVER_OBJ:%=$(ODIR)/%)
@@ -42,7 +42,7 @@ UNITTEST=unittest
 
 CFLAGS=
 CPPFLAGS=
-LDFLAGS=
+LDFLAGS=-lboost_system
 
 BINS=$(SERVER) $(CLIENT)
 DBGS=$(BINS:%=%-g)
@@ -50,7 +50,7 @@ DBGS=$(BINS:%=%-g)
 all:dir opt dbg
 
 dir:
-	mkdir -p obj
+	@mkdir -p obj
 
 opt: CXXFLAGS += -O3 -march=native
 opt: $(BINS)
