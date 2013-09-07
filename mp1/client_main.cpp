@@ -10,7 +10,7 @@
 // 3. configuration file (contains machine IP/hostname, optional)
 //
 // sample usage:
-// ./dgrep [-c conf] -p "pattern" log file list
+// ./dgrep [-c conf] -p "pattern" machine.1.log [machine.2.log ...]
 int main(int argc, char *argv[]) {
   
   // Parse log file list
