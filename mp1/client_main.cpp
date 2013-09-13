@@ -21,10 +21,11 @@ int main(int argc, char *argv[]) {
     boost::asio::io_service io_service;
     tcp::resolver resolver(io_service);
 
-    const char* ip[] = {"linux-v1.ews.illinois.edu",
-                        "linux-a1.ews.illinois.edu",
-                        "linux-a2.ews.illinois.edu",
-                        "linux-a3.ews.illinois.edu", };
+    const char* ip[] = {"localhost",};
+                        // "linux-v1.ews.illinois.edu",
+                        // "linux-a1.ews.illinois.edu",
+                        // "linux-a2.ews.illinois.edu",
+                        // "linux-a3.ews.illinois.edu", };
     const int NSERVERS = sizeof(ip) / sizeof(char*);
     std::vector<ClientPtr> clients;
     std::string pattern("zigang");
