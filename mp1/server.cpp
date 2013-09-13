@@ -24,9 +24,7 @@ void Server::handle_accept(TcpConnPtr new_connection,
 {
   if (!error) {
     // do the real job here
-    std::cout << "start" << std::endl;
     new_connection->start();
-    std::cout << "end" << std::endl;
   }
 
   start_accept();

@@ -3,10 +3,12 @@
 #include "client.h"
 
 // TODO: extend to connect to a list of servers
-Client::Client (std::string pattern,
+Client::Client (std::string filename,
+                std::string pattern,
                 boost::asio::io_service& io_service, 
                 tcp::resolver::iterator endpoint_iterator)
-  : pattern_(pattern), io_service_(io_service), socket_(io_service) {
+  : filename_(filename), pattern_(pattern),
+    io_service_(io_service), socket_(io_service) {
     
   boost::system::error_code error;
   boost::asio::connect(socket_, endpoint_iterator);
@@ -17,7 +19,7 @@ Client::Client (std::string pattern,
   //       boost::asio::placeholders::error));
 }
 
-// upon connection, send the pattern to server
+// upon connection, send the pattern and filename to server
 void Client::handle_connect(const boost::system::error_code& error)
 {
   if (!error) {

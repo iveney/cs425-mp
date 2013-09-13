@@ -48,8 +48,8 @@ void TcpConnection::handle_read_body(const boost::system::error_code& error) {
 }
 
 std::string TcpConnection::do_grep(const std::string& pattern) {
-  std::string command("cat");
-  command += " " + pattern;
+  std::string command("grep");
+  command += " " + pattern + " logs/basic/`hostname`";
   FILE *pipe = popen(command.c_str(), "r");
   if (!pipe) {
     std::cerr << "Error opening file\n";

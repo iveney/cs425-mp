@@ -10,7 +10,8 @@ using boost::asio::ip::tcp;
 class Client {
 public:
   enum { MAX_LENGTH = 8192 };
-  Client (std::string pattern,
+  Client (std::string filename,
+          std::string pattern,
           boost::asio::io_service& io_service, 
           tcp::resolver::iterator endpoint_iterator);
 
@@ -22,6 +23,7 @@ private:
   void handle_output(const boost::system::error_code& error);
   void do_close();
 
+  std::string filename_;
   std::string pattern_;
 
   boost::asio::io_service& io_service_;

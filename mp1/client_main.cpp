@@ -3,6 +3,8 @@
 #include <boost/asio.hpp>
 #include "client_main.h"
 #include "client.h"
+#include "types.h"
+#include "util.hpp"
 
 // TODO: implement command arguments to support:
 // 1. pattern, required
@@ -16,23 +18,26 @@ int main(int argc, char *argv[]) {
   // Parse log file list
   // TODO: Need syntax checker (coz MP1 doc says naming is "machine.i.log")
   try {
-    if (argc != 2)
-    {
-      std::cerr << "Usage: client <host>" << std::endl;
-      return 1;
-    }
-
-    // DEMO: call the server to system call 'ls' and return the content to client
     boost::asio::io_service io_service;
-
     tcp::resolver resolver(io_service);
 
-    // TODO: make the port a parameter
-    tcp::resolver::query query(argv[1], "12345");
-    tcp::resolver::iterator iterator = resolver.resolve(query);
+    const char* ip[] = {"linux-v1.ews.illinois.edu",
+                        "linux-a1.ews.illinois.edu",
+                        "linux-a2.ews.illinois.edu",
+                        "linux-a3.ews.illinois.edu", };
+    const int NSERVERS = sizeof(ip) / sizeof(char*);
+    std::vector<ClientPtr> clients;
+    std::string pattern("zigang");
 
-    std::string fn("TODO");
-    Client client(fn, io_service, iterator);
+    for(int i = 0; i < NSERVERS; i++) {
+      tcp::resolver::query query(ip[i], "12345");
+      tcp::resolver::iterator iterator = resolver.resolve(query);
+      std::string filename;
+      filename = "machine." + to_string(i) + ".log";
+      clients.push_back(ClientPtr(new Client(filename, pattern,
+                                          io_service, iterator)));
+    }
+
     io_service.run();
   } catch (std::exception& e) {
     std::cerr << e.what() << std::endl;
