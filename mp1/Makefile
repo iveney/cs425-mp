@@ -4,12 +4,15 @@ CC=clang++
 CXXFLAGS=-Wall
 ifeq "$(CC)" "g++"
 	# only use c++0x feature when it is >= 4.3
-	GCCVERSIONREQ := $(shell expr `gcc -dumpversion | cut -f1 -d.` \>= 4.3)
+	GCCVERSIONREQ := $(shell expr `g++ -dumpversion | cut -f1 -d.` \>= 4.3)
 	ifeq "$(GCCVERSIONREQ)" "1"
 		CXXFLAGS += -std=c++0x
 	endif
 else ifeq "$(CC)" "clang++"
-	CXXFLAGS += -std=c++11
+	LLVMVERSIONREQ := $(shell expr `clang++ -v 2>&1 | grep "version" | cut -d' ' -f 4` \>= 4.2)
+	ifeq "$(LLVMVERSIONREQ)" "1"
+		CXXFLAGS += -std=c++11
+	endif
 endif
 
 # object dir
