@@ -3,7 +3,11 @@
 CC=clang++
 CXXFLAGS=-Wall
 ifeq "$(CC)" "g++"
-	CXXFLAGS += -std=c++0x
+	# only use c++0x feature when it is >= 4.3
+	GCCVERSIONREQ := $(shell expr `gcc -dumpversion | cut -f1 -d.` \>= 4.3)
+	ifeq "$(GCCVERSIONREQ)" "1"
+		CXXFLAGS += -std=c++0x
+	endif
 else ifeq "$(CC)" "clang++"
 	CXXFLAGS += -std=c++11
 endif
@@ -42,7 +46,7 @@ UNITTEST=unittest
 
 CFLAGS=
 CPPFLAGS=
-LDFLAGS=-lboost_system -lpthread
+LDFLAGS=-lboost_system-mt -lpthread
 
 BINS=$(SERVER) $(CLIENT)
 DBGS=$(BINS:%=%-g)
@@ -52,10 +56,10 @@ all:dir opt dbg
 dir:
 	@mkdir -p obj
 
-opt: CXXFLAGS += -O3 -march=native
+opt: CXXFLAGS += -O3
 opt: $(BINS)
 
-dbg: CXXFLAGS += -g -DDEBUG -O3 -march=native
+dbg: CXXFLAGS += -g -DDEBUG -O3
 dbg: $(DBGS)
 
 dgrepd:$(SERVER_OBJ)
