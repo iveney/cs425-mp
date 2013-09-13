@@ -13,7 +13,7 @@ using boost::asio::ip::tcp;
 
 class Server {
 public:
-  const unsigned short LISTEN_PORT = 12345;
+  enum {LISTEN_PORT = 12345};
   Server(boost::asio::io_service& io_service);
 
 private:
