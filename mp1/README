@@ -1,0 +1,11 @@
+Note that the makefile assumes a custom build boost library in the current directory:
+
+boost/
+  include/
+  lib/
+
+before executing the binary, need to do:
+
+  export LD_LIBRARY_PATH=boost/lib
+
+to let the loader find the boost libraries.
