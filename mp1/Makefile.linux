@@ -48,8 +48,8 @@ UNITTEST_OBJ_G=$(UNITTEST_OBJ:.o=.o-g)
 UNITTEST=unittest
 
 CFLAGS=
-CPPFLAGS=
-LDFLAGS=-lboost_system-mt -lpthread
+CPPFLAGS=-Iboost/include
+LDFLAGS=-Lboost/lib -lboost_system -lpthread
 
 BINS=$(SERVER) $(CLIENT)
 DBGS=$(BINS:%=%-g)
