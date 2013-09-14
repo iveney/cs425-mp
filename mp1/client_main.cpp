@@ -24,9 +24,9 @@ int main(int argc, char *argv[]) {
     const char* hosts[] = {
                         "localhost",
                         "linux-v1.ews.illinois.edu",
-                        // "linux-a1.ews.illinois.edu",
-                        // "linux-a2.ews.illinois.edu",
-                        // "linux-a3.ews.illinois.edu",
+                        "linux-a1.ews.illinois.edu",
+                        "linux-a2.ews.illinois.edu",
+                        "linux-a3.ews.illinois.edu",
                        };
     const int NSERVERS = sizeof(hosts) / sizeof(char*);
     std::vector<ClientPtr> clients;
