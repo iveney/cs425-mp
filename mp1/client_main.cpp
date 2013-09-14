@@ -3,6 +3,7 @@
 #include <boost/asio.hpp>
 #include "client_main.h"
 #include "client.h"
+#include "name_parser.h"
 #include <boost/program_options.hpp>
 
 using namespace boost;
@@ -30,16 +31,16 @@ int main(int argc, char *argv[]) {
             return 1;
         }
         
-        std::string pattern;
-        std::vector<std::string> filenames;
-        std::string config;
+        string pattern;
+        vector<string> filenames;
+        string config;
         
         po::options_description desc("Allowed options");
         desc.add_options()
         ("help", "produce help message")
-        ("config,c", po::value< std::string >(&config)->default_value("config.txt"), "configuration file (optional)")
-        ("pattern,p", po::value< std::string >(&pattern), "pattern")
-        ("filenames", po::value< std::vector<std::string> >(&filenames), "log files to be searched")
+        ("config,c", po::value< string >(&config)->default_value("config.txt"), "configuration file (optional)")
+        ("pattern,p", po::value< string >(&pattern), "pattern")
+        ("filenames", po::value< vector<string> >(&filenames), "log files to be searched")
         ;
         
         po::positional_options_description p;
@@ -58,6 +59,47 @@ int main(int argc, char *argv[]) {
         if (vm.count("pattern") && vm.count("filenames"))
         {
             cout << "using config file: " << config << "\n";
+            cout << "using pattern: " <<  pattern << "\n";
+            
+            vector<int> machineIndices(filenames.size());
+            
+            NameParser nparser;
+            bool result;
+            
+            //Read in the configuration file 
+            result = nparser.readInConfig(config);
+            if(!result)
+            {
+                cout << "Error reading configuration file" << endl;
+            }
+            
+            //Print the addresses read in from the config file
+            string addr;
+            for(int i = 0; i<4; i++)
+            {
+                result = nparser.getAddress(i, addr);
+                if(!result)
+                {
+                    cout<< "error getting address for " << i << endl; 
+                }
+                cout << "Machine " << i << ": " << addr << "\n";
+            }
+            
+            //Get the IDs of the machines requested for grep
+            result = nparser.getIds(filenames, machineIndices);
+            if(!result)
+            {
+                cout<<"Filenames incorrect, please check that all are of the format machine.i.log and that there are no more that 4 files listed"<<"\n";
+            }
+            
+            cout << "Indices of queried logs: ";
+            
+            for(int i = 0; i<machineIndices.size(); i++)
+            {
+                cout << machineIndices[i] << " ";
+            }
+            
+            cout << "\n";
             
             // DEMO: call the server to system call 'ls' and return the content to client
             boost::asio::io_service io_service;
@@ -68,7 +110,7 @@ int main(int argc, char *argv[]) {
             tcp::resolver::query query("localhost", "12345");
             tcp::resolver::iterator iterator = resolver.resolve(query);
             
-            std::string fn("TODO");
+            string fn("TODO");
             Client client(fn, io_service, iterator);
             io_service.run();
             
