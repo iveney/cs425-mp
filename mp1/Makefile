@@ -30,7 +30,7 @@ SERVER_OBJ_G=$(SERVER_OBJ:.o=.o-g)
 SERVER=dgrepd
 
 CLIENT_SRC=$(SRC)
-CLIENT_SRC+=client_main.cpp client.cpp
+CLIENT_SRC+=client_main.cpp client.cpp name_parser.cpp
 CLIENT_HDR=$(CLIENT_SRC:.cpp=.h)
 _CLIENT_OBJ=$(CLIENT_SRC:.cpp=.o) 
 CLIENT_OBJ=$(_CLIENT_OBJ:%=$(ODIR)/%)

@@ -7,127 +7,65 @@
 //
 
 #include <iostream>
+#include <string>
 #include "name_parser.h"
 
 using namespace std;
 
-NameParser::NameParser()
-{
-    //open file from filepath with machine names and addresses
-    //read names into names and addresses into ids
-    addresses.resize(4);
-    addresses[0].assign("empty");
+NameParser::NameParser(const string& config) {
+  readInConfig(config);
+  hosts_.push_back("localhost");
 }
 
-bool NameParser::readInConfig(std::string filename)
-{   
-    char * cstr = new char [filename.length()+1];
-    std::strcpy (cstr, filename.c_str());
-    
-    cout << cstr << endl;
-    string line;
-    ifstream configFile(cstr);
-    int index = 0;
-    if (configFile.is_open())
-    {
-        while ( index <= 3 && getline (configFile,line) )
-        {
-            addresses[index].assign(line);
-            index++;
-        }
-        configFile.close();
-        return true;
+// Each line is an IP/hostname
+bool NameParser::readInConfig(const string& filename) {
+    ifstream configFile(filename.c_str());
+    if (configFile.is_open()) {
+      string line;
+      while ( getline (configFile,line) ) {
+        hosts_.push_back(line);
+      }
+      configFile.close();
+      return true;
     }
     return false;
 }
-
-bool NameParser::getAddress(int index, string& address)
-{
-    if(index > 3)
-    {
-        return false;
-    }
-    address.assign(addresses[index]);
-    return true;
-}
-
-//eventually return error
 
 /* assumptions:
  * filenames is of the form "machine.i.log machine.i.log ..."
  * limiting number of files to 4 here
  */
-bool NameParser::getIds(vector<std::string> filenames, vector<int>& result)
+bool NameParser::getIds(const vector<string>& filenames, vector<int>& result)
 {
-    int machineNumber;
-    std::string address;
-    
-    int numFiles = filenames.size();
-    
-    if(numFiles < 5)
-    {
-        for(int index=0; index<numFiles; index++)
-        {
-            if(getMachineNumber(filenames[index], machineNumber))
-            {
-                result[index] = machineNumber;
-            }
-            else
-            {
-                //error, bad file name
-                return false;
-            }
-        }
-        
+  int machineNumber;
+  string address;
+
+  int numFiles = filenames.size();
+
+  for(int index=0; index<numFiles; index++) {
+    if(getMachineNumber(filenames[index], machineNumber)) {
+      result[index] = machineNumber;
+    } else {
+      //error, bad file name
+      return false;
     }
-    else
-    {
-        //return an error, too many filenames
-        return false;
-    }
-    
-    return true;
+  }
+  return true;
 }
 
-bool NameParser::getMachineNumber(std::string filename, int & machineNumber)
-{
-    string fname;
-    
-    fname = "machine.";
-    fname += "1";
-    fname += ".log";
-    if(fname.compare(filename) == 0)
-    {
-        machineNumber = 0;
-        return true;
-    }
-    
-    fname = "machine.";
-    fname += "2";
-    fname += ".log";
-    if(fname.compare(filename) == 0)
-    {
-        machineNumber = 1;
-        return true;
-    }
-    
-    fname = "machine.";
-    fname += "3";
-    fname += ".log";
-    if(fname.compare(filename) == 0)
-    {
-        machineNumber = 2;
-        return true;
-    }
-    
-    fname = "machine.";
-    fname += "4";
-    fname += ".log";
-    if(fname.compare(filename) == 0)
-    {
-        machineNumber = 3;
-        return true;
-    }
-    
+bool NameParser::getMachineNumber(const string& filename, int& machineNumber) {
+  // sample: machine.3.log
+  //         0       8 10
+  string machine_part = filename.substr(0, 7);
+  string idx_part     = filename.substr(8, 1);
+  string log_part     = filename.substr(10, 3);
+  if (machine_part != "machine" || log_part != "log") {
+    cerr << "File name '" << filename << "' invalid!" << endl;
     return false;
+  }
+
+  if(sscanf(idx_part.c_str(), "%d", &machineNumber) != 1)
+    return false;
+
+  return true;
 }

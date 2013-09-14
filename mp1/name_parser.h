@@ -8,15 +8,14 @@ using namespace std;
 
 class NameParser {
 public:
-    NameParser();
-    bool getIds(vector<string> filenames, vector<int> & result);
-    bool getMachineNumber(string filename, int & machineNumber);
-    bool readInConfig(std::string filename);
-    bool getAddress(int index, string& address);
+    NameParser(const string& config);
+    bool getIds(const vector<string>& filenames, vector<int> & result);
+    bool getMachineNumber(const string& filename, int& machineNumber);
+    bool readInConfig(const string& filename);
+    const vector<string>& hosts() const {return hosts_;};
     
 private:
-    vector<string> addresses;
-    
+    vector<string> hosts_;
 };
 
 #endif /* end of include guard: _NAME_PARSER_H_ */
