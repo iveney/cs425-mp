@@ -3,9 +3,9 @@
 CC=clang++
 CXXFLAGS=-Wall
 ifeq "$(CC)" "g++"
-	CXXFLAGS += -std=c++0x
+	CXXFLAGS +=
 else ifeq "$(CC)" "clang++"
-	CXXFLAGS += -std=c++11
+	CXXFLAGS += 
 endif
 
 # object dir
@@ -23,7 +23,7 @@ SERVER_OBJ_G=$(SERVER_OBJ:.o=.o-g)
 SERVER=dgrepd
 
 CLIENT_SRC=$(SRC)
-CLIENT_SRC+=client_main.cpp client.cpp
+CLIENT_SRC+=client_main.cpp client.cpp name_parser.cpp
 CLIENT_HDR=$(CLIENT_SRC:.cpp=.h)
 _CLIENT_OBJ=$(CLIENT_SRC:.cpp=.o) 
 CLIENT_OBJ=$(_CLIENT_OBJ:%=$(ODIR)/%)
@@ -42,7 +42,8 @@ UNITTEST=unittest
 
 CFLAGS=
 CPPFLAGS=
-LDFLAGS=-lboost_system
+LDFLAGS=-lboost_system-mt
+LDFLAGS+=-lboost_program_options-mt
 
 BINS=$(SERVER) $(CLIENT)
 DBGS=$(BINS:%=%-g)
@@ -52,10 +53,10 @@ all:dir opt dbg
 dir:
 	@mkdir -p obj
 
-opt: CXXFLAGS += -O3 -march=native
+opt: CXXFLAGS += -O3
 opt: $(BINS)
 
-dbg: CXXFLAGS += -g -DDEBUG -O3 -march=native
+dbg: CXXFLAGS += -g -DDEBUG -O3
 dbg: $(DBGS)
 
 dgrepd:$(SERVER_OBJ)
