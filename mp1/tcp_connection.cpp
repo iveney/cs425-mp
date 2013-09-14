@@ -13,7 +13,7 @@ void TcpConnection::start() {
 void TcpConnection::handle_read_header(const boost::system::error_code& error) {
   if (!error && pattern_.decode_header()) {
     boost::asio::async_read(socket_,
-        boost::asio::buffer(pattern_.body(), Message::header_length),
+        boost::asio::buffer(pattern_.body(), pattern_.body_length()),
         boost::bind(&TcpConnection::handle_read_body, shared_from_this(),
           boost::asio::placeholders::error));
   } else {
