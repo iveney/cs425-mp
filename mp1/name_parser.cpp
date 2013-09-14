@@ -13,16 +13,16 @@
 using namespace std;
 
 NameParser::NameParser(const string& config) {
-  readInConfig(config);
   hosts_.push_back("localhost");
+  readInConfig(config);
 }
 
 // Each line is an IP/hostname
 bool NameParser::readInConfig(const string& filename) {
     ifstream configFile(filename.c_str());
-    if (configFile.is_open()) {
+    if (configFile) {
       string line;
-      while ( getline (configFile,line) ) {
+      while ( getline (configFile, line) ) {
         hosts_.push_back(line);
       }
       configFile.close();
