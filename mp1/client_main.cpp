@@ -21,17 +21,19 @@ int main(int argc, char *argv[]) {
     boost::asio::io_service io_service;
     tcp::resolver resolver(io_service);
 
-    const char* ip[] = {"localhost",};
-                        // "linux-v1.ews.illinois.edu",
-                        // "linux-a1.ews.illinois.edu",
-                        // "linux-a2.ews.illinois.edu",
-                        // "linux-a3.ews.illinois.edu", };
-    const int NSERVERS = sizeof(ip) / sizeof(char*);
+    const char* hosts[] = {
+                        // "localhost",
+                        "linux-v1.ews.illinois.edu",
+                        "linux-a1.ews.illinois.edu",
+                        "linux-a2.ews.illinois.edu",
+                        "linux-a3.ews.illinois.edu",
+                       };
+    const int NSERVERS = sizeof(hosts) / sizeof(char*);
     std::vector<ClientPtr> clients;
     std::string pattern("zigang");
 
     for(int i = 0; i < NSERVERS; i++) {
-      tcp::resolver::query query(ip[i], "12345");
+      tcp::resolver::query query(hosts[i], "12345");
       tcp::resolver::iterator iterator = resolver.resolve(query);
       std::string filename;
       filename = "machine." + to_string(i) + ".log";

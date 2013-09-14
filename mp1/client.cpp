@@ -10,20 +10,19 @@ Client::Client (std::string filename,
   : filename_(filename), pattern_(pattern),
     io_service_(io_service), socket_(io_service) {
     
-  boost::system::error_code error;
-  boost::asio::connect(socket_, endpoint_iterator);
-  handle_connect(error);
+  // boost::system::error_code error;
+  // boost::asio::connect(socket_, endpoint_iterator);
+  // handle_connect(error);
     
-  // boost::asio::async_connect(socket_, endpoint_iterator,
-  //     boost::bind(&Client::handle_connect, this,
-  //       boost::asio::placeholders::error));
+  boost::asio::async_connect(socket_, endpoint_iterator,
+      boost::bind(&Client::handle_connect, this,
+        boost::asio::placeholders::error));
 }
 
 // upon connection, send the pattern and filename to server
 void Client::handle_connect(const boost::system::error_code& error)
 {
   if (!error) {
-
     Message msg(pattern_);
     
     boost::asio::async_write(socket_,
@@ -31,7 +30,7 @@ void Client::handle_connect(const boost::system::error_code& error)
         boost::bind(&Client::handle_read, this,
           boost::asio::placeholders::error));
   } else {
-    std::cout << "Error in handle_connect!\n";
+    std::cout << "[handle_connect] " << error.message() << std::endl;
     do_close();
   }
 }
@@ -53,7 +52,7 @@ void Client::handle_read(const boost::system::error_code& error) {
     //     boost::bind(&Client::handle_output, this,
     //       boost::asio::placeholders::error));
   } else {
-    std::cout << "Error!" << std::endl;
+    std::cout << "[handle_read] " << error.message() << std::endl;
     do_close();
   }
 }
