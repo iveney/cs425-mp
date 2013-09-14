@@ -23,6 +23,7 @@ public:
   }
 
   void start();
+  void do_close();
 
 private:
   TcpConnection(boost::asio::io_service& io_service)

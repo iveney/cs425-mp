@@ -10,6 +10,10 @@ void TcpConnection::start() {
         boost::asio::placeholders::error));
 }
 
+void TcpConnection::do_close() {
+  socket_.close();
+}
+
 void TcpConnection::handle_read_header(const boost::system::error_code& error) {
   if (!error && pattern_.decode_header()) {
     boost::asio::async_read(socket_,
@@ -17,7 +21,14 @@ void TcpConnection::handle_read_header(const boost::system::error_code& error) {
         boost::bind(&TcpConnection::handle_read_body, shared_from_this(),
           boost::asio::placeholders::error));
   } else {
-    std::cerr << "[handle_read_header] " << error.message() << std::endl;
+    // when there are more cases, use switch:
+    // http://stackoverflow.com/a/9225181/577704
+    if (error.value() == boost::asio::error::eof) {
+      std::cout << "Connection closed by peer.\n";
+      do_close();
+    } else {
+      std::cerr << "[handle_read_header] " << error.message() << std::endl;
+    }
   }
 }
 
