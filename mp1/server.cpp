@@ -1,5 +1,6 @@
 #include <iostream>
 #include <boost/bind.hpp>
+
 #include "server.h"
 #include "tcp_connection.h"
 
@@ -23,9 +24,15 @@ void Server::handle_accept(TcpConnPtr new_connection,
     const boost::system::error_code& error)
 {
   if (!error) {
+    tcp::endpoint endpoint = new_connection->socket().remote_endpoint();
+    boost::asio::ip::address addr = endpoint.address();
+    unsigned short port = endpoint.port();
+    std::cout << "Connected: " << addr << ":" << port << std::endl;
+
     // do the real job here
     new_connection->start();
   }
 
+  // go back to accept new queries
   start_accept();
 }

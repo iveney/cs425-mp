@@ -24,7 +24,7 @@ void TcpConnection::handle_read_header(const boost::system::error_code& error) {
 void TcpConnection::handle_read_body(const boost::system::error_code& error) {
   if (!error) {
     // now we have the pattern, do the grep
-    std::cout << "String received: ";
+    std::cout << "Pattern received: ";
     std::cout.write(pattern_.body(), pattern_.body_length());
     std::cout << "\n";
 
@@ -56,6 +56,7 @@ std::string TcpConnection::do_grep(const std::string& pattern) {
     return "Error";
   }
 
+  // read in all the outputs into buffer
   char buffer[128];
   std::string result = "";
   while(!feof(pipe)) {
