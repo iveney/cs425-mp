@@ -24,10 +24,7 @@ void Client::handle_connect(const boost::system::error_code& error)
 {
   if (!error) {
 
-    Message msg;
-    msg.body_length(pattern_.length());
-    memcpy(msg.body(), pattern_.c_str(), msg.body_length());
-    msg.encode_header();
+    Message msg(pattern_);
     
     boost::asio::async_write(socket_,
         boost::asio::buffer(msg.data(), msg.length()),

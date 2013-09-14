@@ -6,6 +6,8 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <string>
+using std::string;
 
 class Message {
 public:
@@ -15,6 +17,11 @@ public:
   Message()
     : body_length_(0)
   {
+  }
+
+  Message(const string& str) : body_length_(str.length()) {
+    memcpy(body(), str.c_str(), body_length());
+    encode_header();
   }
 
   const char* data() const
