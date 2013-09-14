@@ -23,6 +23,11 @@ Client::Client (std::string filename,
 void Client::handle_connect(const boost::system::error_code& error)
 {
   if (!error) {
+    tcp::endpoint endpoint = socket_.remote_endpoint();
+    boost::asio::ip::address addr = endpoint.address();
+    unsigned short port = endpoint.port();
+    std::cout << "Connected: " << addr << ":" << port << std::endl;
+
     Message msg(pattern_);
     
     boost::asio::async_write(socket_,
@@ -38,32 +43,41 @@ void Client::handle_connect(const boost::system::error_code& error)
 // upon sending the pattern, read the content sent back by server
 void Client::handle_read(const boost::system::error_code& error) {
   if (!error) {
-    boost::system::error_code e;
-    char buffer[MAX_LENGTH];
-    socket_.read_some(boost::asio::buffer(buffer), e);
-    if (e == boost::asio::error::eof)
-      do_close(); // Connection closed cleanly by peer.
-    else if (e)
-      throw boost::system::system_error(e); // Some other error.
-
-    std::cout << "Result is:\n" << buffer << std::endl;
-    // boost::asio::async_read(socket_,
-    //     boost::asio::buffer(buffer, MAX_LENGTH),
-    //     boost::bind(&Client::handle_output, this,
-    //       boost::asio::placeholders::error));
+    boost::asio::async_read(socket_,
+        boost::asio::buffer(result_.data(), Message::header_length),
+        boost::bind(&Client::handle_read_header, this,
+          boost::asio::placeholders::error));
   } else {
     std::cout << "[handle_read] " << error.message() << std::endl;
     do_close();
   }
 }
 
-void Client::handle_output(const boost::system::error_code& error) {
-  // if (!error) {
-  //   std::cout << "Result is:\n" << buffer << std::endl;
-  // } else {
-  //   std::cout << "Error!" << std::endl;
-  //   do_close();
-  // }
+void Client::handle_read_header(const boost::system::error_code& error) {
+  if (!error && result_.decode_header()) {
+    boost::asio::async_read(socket_,
+        boost::asio::buffer(result_.body(), result_.body_length()),
+        boost::bind(&Client::handle_read_body, this, 
+          boost::asio::placeholders::error));
+  } else {
+    std::cout << "[handle_read_header] " << error.message() << std::endl;
+    do_close();
+  }
+}
+
+void Client::handle_read_body(const boost::system::error_code& error) {
+  if (!error && result_.decode_header()) {
+
+    // now we have the result
+    std::cout << filename_ << ":\n";
+    std::cout.write(result_.body(), result_.body_length());
+    std::cout << "\n";
+
+    do_close();
+  } else {
+    std::cout << "[handle_read_header] " << error.message() << std::endl;
+    do_close();
+  }
 }
 
 void Client::close() {

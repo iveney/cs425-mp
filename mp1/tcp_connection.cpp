@@ -14,6 +14,7 @@ void TcpConnection::do_close() {
   socket_.close();
 }
 
+// handle_read_header and handle_read_body: reads a Message object
 void TcpConnection::handle_read_header(const boost::system::error_code& error) {
   if (!error && pattern_.decode_header()) {
     boost::asio::async_read(socket_,
@@ -42,13 +43,14 @@ void TcpConnection::handle_read_body(const boost::system::error_code& error) {
     std::string pattern(pattern_.body());
 
     // send the result back to client
-    std::string message = do_grep(pattern);
-    boost::asio::async_write(socket_, boost::asio::buffer(message),
+    Message msg(do_grep(pattern));
+    boost::asio::async_write(socket_,
+        boost::asio::buffer(msg.data(), msg.length()),
         boost::bind(&TcpConnection::handle_write, shared_from_this(),
-          boost::asio::placeholders::error,
-          boost::asio::placeholders::bytes_transferred));
+        boost::asio::placeholders::error,
+        boost::asio::placeholders::bytes_transferred));
 
-    // continue reading...
+    // issue next read...
     boost::asio::async_read(socket_,
         boost::asio::buffer(pattern_.data(), Message::header_length),
         boost::bind(&TcpConnection::handle_read_header, shared_from_this(),

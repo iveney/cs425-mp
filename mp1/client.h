@@ -20,11 +20,13 @@ public:
 private:
   void handle_connect(const boost::system::error_code& error);
   void handle_read(const boost::system::error_code& error);
-  void handle_output(const boost::system::error_code& error);
+  void handle_read_header(const boost::system::error_code& error);
+  void handle_read_body(const boost::system::error_code& error);
   void do_close();
 
   std::string filename_;
   std::string pattern_;
+  Message result_;
 
   boost::asio::io_service& io_service_;
   tcp::socket socket_;

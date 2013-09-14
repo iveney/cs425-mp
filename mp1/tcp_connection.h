@@ -42,7 +42,6 @@ private:
   tcp::socket socket_;
 
   Message pattern_;
-  Message result_;
 };
 
 #endif /* end of include guard: _TCP_CONNECTION_H_ */
