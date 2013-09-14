@@ -9,6 +9,9 @@
 #include "util.hpp"
 
 using std::string;
+using std::vector;
+using std::cout;
+using std::endl;
 using namespace boost;
 namespace po = boost::program_options;
 
@@ -27,7 +30,7 @@ int main(int argc, char *argv[]) {
     desc.add_options()
       ("help", "produce help message")
       ("config,c", po::value< string >(&config)->
-       default_value("config.txt"), "configuration file (optional)")
+       default_value("config"), "configuration file (optional)")
       ("pattern,p", po::value< string >(&pattern), "pattern")
       ("filenames", po::value< vector<string> >(&filenames),
        "log files to be searched")
@@ -42,12 +45,11 @@ int main(int argc, char *argv[]) {
     po::notify(vm);
 
     if (vm.count("help") || !vm.count("pattern") || !vm.count("filenames")) {
-      cout << "Usage: ./dgrep [-c conf] -p \"pattern\" machine.1.log [machine.2.log ...]\n";
+      cout << "Usage: ./dgrep [-c conf] -p <pattern> machine.1.log [machine.2.log ...]\n";
       cout << desc;
       return 1;
     }
 
-    cout << "using config file: " << config << "\n";
     boost::asio::io_service io_service;
     tcp::resolver resolver(io_service);
 
@@ -61,7 +63,6 @@ int main(int argc, char *argv[]) {
 
     const int NSERVERS = sizeof(hosts) / sizeof(char*);
     std::vector<ClientPtr> clients;
-    std::string pattern("zigang");
 
     for(int i = 0; i < NSERVERS; i++) {
       tcp::resolver::query query(hosts[i], "12345");

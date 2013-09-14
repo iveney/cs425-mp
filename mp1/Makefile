@@ -49,7 +49,7 @@ UNITTEST=unittest
 
 CFLAGS=
 CPPFLAGS=
-LDFLAGS=-lboost_system-mt -lpthread
+LDFLAGS=-lboost_system-mt -lboost_program_options-mt -lpthread
 
 BINS=$(SERVER) $(CLIENT)
 DBGS=$(BINS:%=%-g)
