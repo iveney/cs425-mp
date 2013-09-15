@@ -68,9 +68,26 @@ void Server::handle_read(TcpConnPtr conn, QueryPtr query,
 }
 
 string Server::do_grep(const Query& query) {
-  string command;
-  command = "grep " + query.pattern_ + " logs/basic/" + query.filename_;
-  FILE *pipe = popen(command.c_str(), "r");
+  // TODO: specify base and delimiter in query
+  static const char* base = "./logs/provided";
+  static const char delimiter = ':';
+  string fullpath(base);
+  fullpath += "/" + query.filename_;
+  string reg = "";
+  switch (query.type_) {
+    case Query::KEY:
+      reg = "'$1' ~ ";
+      break;
+    case Query::VALUE:
+      reg = "'$2' ~ ";
+      break;
+    case Query::BOTH:
+      break;
+  }
+  char cmd[1024];
+  sprintf(cmd, "awk -F '%c' '%s/%s/' %s",
+                delimiter, reg.c_str(), query.pattern_.c_str(), fullpath.c_str());
+  FILE *pipe = popen(cmd, "r");
   if (!pipe) {
     std::cerr << "Error opening file\n";
     return "Error";
