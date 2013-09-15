@@ -19,7 +19,7 @@ Client::Client (std::string filename,
         boost::asio::placeholders::error));
 }
 
-// upon connection, send the pattern and filename to server
+// upon connection, send the type, pattern and filename to server
 void Client::handle_connect(const boost::system::error_code& error)
 {
   if (!error) {

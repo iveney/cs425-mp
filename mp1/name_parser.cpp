@@ -19,16 +19,16 @@ NameParser::NameParser(const string& config) {
 
 // Each line is an IP/hostname
 bool NameParser::readInConfig(const string& filename) {
-    ifstream configFile(filename.c_str());
-    if (configFile) {
-      string line;
-      while ( getline (configFile, line) ) {
-        hosts_.push_back(line);
-      }
-      configFile.close();
-      return true;
+  ifstream configFile(filename.c_str());
+  if (configFile) {
+    string line;
+    while ( getline (configFile, line) ) {
+      hosts_.push_back(line);
     }
-    return false;
+    configFile.close();
+    return true;
+  }
+  return false;
 }
 
 /* assumptions:
