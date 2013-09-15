@@ -97,8 +97,7 @@ int main(int argc, char *argv[]) {
       Query send_query(query_type, pattern, filename);
       tcp::resolver::query query(hostname.c_str(), port);
       tcp::resolver::iterator iterator = resolver.resolve(query);
-      clients.push_back(ClientPtr(new Client(filename, pattern,
-              io_service, iterator)));
+      clients.push_back(ClientPtr(new Client(send_query, io_service, iterator)));
     }
 
     io_service.run();

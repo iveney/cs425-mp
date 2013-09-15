@@ -2,18 +2,6 @@
 #include <boost/bind.hpp>
 #include "client.h"
 
-Client::Client (std::string filename,
-                std::string pattern,
-                boost::asio::io_service& io_service, 
-                tcp::resolver::iterator endpoint_iterator)
-  : filename_(filename), pattern_(pattern), query_(Query::KEY, pattern, filename),
-    io_service_(io_service), socket_(io_service) {
-    
-  boost::asio::async_connect(socket_, endpoint_iterator,
-      boost::bind(&Client::handle_connect, this,
-        boost::asio::placeholders::error));
-}
-
 Client::Client (Query query,
                 boost::asio::io_service& io_service, 
                 tcp::resolver::iterator endpoint_iterator)
@@ -33,7 +21,7 @@ void Client::handle_connect(const boost::system::error_code& error)
     unsigned short port = endpoint.port();
     std::cout << "Connected: " << addr << ":" << port << std::endl;
 
-    Message msg(pattern_);
+    Message msg(query_.pattern_);
     
     boost::asio::async_write(socket_,
         boost::asio::buffer(msg.data(), msg.length()),
@@ -74,7 +62,7 @@ void Client::handle_read_body(const boost::system::error_code& error) {
   if (!error && result_.decode_header()) {
 
     // now we have the result
-    std::cout << filename_ << ":\n";
+    std::cout << query_.filename_ << ":\n";
     std::cout.write(result_.body(), result_.body_length());
     std::cout << "\n";
 
