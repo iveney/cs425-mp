@@ -7,7 +7,7 @@
 #include "client.h"
 #include "name_parser.h"
 #include "types.h"
-#include "query.hpp"
+#include "query.h"
 #include "util.hpp"
 
 using namespace std;

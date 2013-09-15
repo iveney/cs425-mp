@@ -3,14 +3,12 @@
 
 #include <boost/asio.hpp>
 #include <string>
-#include "query.hpp"
+#include "query.h"
 #include "types.h"
 using boost::asio::ip::tcp;
 
 class Client {
 public:
-  enum { MAX_LENGTH = 8192 };
-
   Client (Query query,
           boost::asio::io_service& io_service, 
           tcp::resolver::iterator endpoint_iterator);
