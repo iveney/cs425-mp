@@ -76,10 +76,10 @@ string Server::do_grep(const Query& query) {
   string reg = "";
   switch (query.type_) {
     case Query::KEY:
-      reg = "'$1' ~ ";
+      reg = "$1 ~ ";
       break;
     case Query::VALUE:
-      reg = "'$2' ~ ";
+      reg = "$2 ~ ";
       break;
     case Query::BOTH:
       break;
