@@ -1,10 +1,9 @@
 #include "query.h"
 
 std::ostream& operator << (std::ostream& os, Query& query) {
-  os << "Type: " << query.type_string();
-  os << " Pattern: " << query.pattern_;
-  os << " Filename: " << query.filename_;
-  os << "\n";
+  os << "[Type]     " << query.type_string() << "\n";
+  os << "[Pattern]  " << query.pattern_ << "\n";
+  os << "[Filename] " << query.filename_ << "\n";
   return os;
 }
 
