@@ -48,17 +48,17 @@ void Client::handle_write(const boost::system::error_code& error) {
   } else {
     connection_->do_close();
 
-    if (trial_ >= 3) {
-      cout << trial_ << " : Already reached maximum trials.\n";
+    if (trial_ >= MAX_TRIAL) {
+      cout << "Already reached maximum trials (" << MAX_TRIAL << ").\n";
       return;
     }
 
     // wait 5 seconds and reconnect
     time_t_timer timer(io_service_);
-    timer.expires_from_now(5);
-    cout << "Wait to retry: " << ++trial_ << " attempts\n";
+    timer.expires_from_now(WAIT_TIME);
+    cout << "Wait " << WAIT_TIME << "s to retry: " << ++trial_ << " attempts.\n";
     timer.wait();
-    cout << "reconnecting ...\n";
+    cout << "Reconnecting ...\n";
     do_connect();
   }
 }

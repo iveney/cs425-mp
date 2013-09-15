@@ -17,6 +17,8 @@ public:
   void close();
 
 private:
+  enum {WAIT_TIME = 5};
+  enum {MAX_TRIAL = 3};
   void do_connect();
   void handle_connect(const boost::system::error_code& error);
   void handle_write(const boost::system::error_code& error);
