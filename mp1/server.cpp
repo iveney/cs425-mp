@@ -1,5 +1,5 @@
 #include "server.h"
-#include "tcp_connection.h"
+#include "tcp_connection.hpp"
 #include <boost/serialization/string.hpp>
 #include <boost/serialization/vector.hpp>
 #include "query.hpp"
