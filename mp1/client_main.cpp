@@ -89,7 +89,7 @@ int main(int argc, char *argv[]) {
     vector<ClientPtr> clients;
 
     const vector<string>& hosts = nparser.hosts();
-    for (int i = 0; i < filenames.size(); i++) {
+    for (size_t i = 0; i < filenames.size(); i++) {
       const string& hostname = hosts[host_ids[i]];
       const string& filename = filenames[i];
       cout << filename << " @ " << hostname << endl;
