@@ -4,9 +4,11 @@ Tested on Mac OS X 10.8:
 - Apple LLVM version 4.2 (clang-425.0.28) (based on LLVM 3.2svn)
 - i686-apple-darwin11-llvm-g++-4.2 (GCC) 4.2.1 (Based on Apple Inc. build 5658) 
 
-Under linux, use the following to specify g++ and custom boost library:
+By default the compiler is clang++. Use the following to specify g++ and custom boost library:
 
   make CC=g++ CUSTOM_BOOST=1 
+
+The makefile assumes the custom boost library is under the project root.
 
 How to run
 ----------
@@ -16,8 +18,8 @@ boost/
   include/
   lib/
 
-before executing the binary, need to do:
+before executing the binary, please do the following:
 
   export LD_LIBRARY_PATH=boost/lib
 
-to let the loader find the boost libraries.
+to let the loader find the custom built boost libraries.
