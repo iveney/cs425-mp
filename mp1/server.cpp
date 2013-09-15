@@ -70,7 +70,7 @@ void Server::handle_read(TcpConnPtr conn, const Query& query,
 
 string Server::do_grep(const Query& query) {
   string command;
-  command = "grep " + query.pattern_ + " logs/" + query.filename_;
+  command = "grep " + query.pattern_ + " logs/basic/" + query.filename_;
   FILE *pipe = popen(command.c_str(), "r");
   if (!pipe) {
     std::cerr << "Error opening file\n";

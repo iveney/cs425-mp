@@ -1,6 +1,6 @@
 #include <iostream>
 #include <boost/bind.hpp>
-#include "tcp_connection.h"
+#include "tcp_connection.hpp"
 #include "message.h"
 
 void TcpConnection::start() {

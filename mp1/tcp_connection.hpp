@@ -142,8 +142,7 @@ public:
     }
   }
 
-  void start();
-  void do_close();
+  void do_close() {socket_.close();}
 
 private:
   TcpConnection(boost::asio::io_service& io_service)

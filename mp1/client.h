@@ -7,6 +7,7 @@ using boost::asio::ip::tcp;
 
 #include "message.h"
 #include "query.hpp"
+#include "types.h"
 
 class Client {
 public:
@@ -20,16 +21,16 @@ public:
 
 private:
   void handle_connect(const boost::system::error_code& error);
+  void handle_write(const boost::system::error_code& error);
   void handle_read(const boost::system::error_code& error);
-  void handle_read_header(const boost::system::error_code& error);
-  void handle_read_body(const boost::system::error_code& error);
-  void do_close();
+  // void handle_read_header(const boost::system::error_code& error);
+  // void handle_read_body(const boost::system::error_code& error);
 
   Query query_;
-  Message result_;
+  std::string result_;
 
-  boost::asio::io_service& io_service_;
-  tcp::socket socket_;
+  TcpConnPtr connection_; // connection to server
+  // tcp::socket socket_;
 };
 
 #endif /* end of include guard: _CLIENT_H_ */
