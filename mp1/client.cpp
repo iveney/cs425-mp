@@ -2,7 +2,6 @@
 #include <boost/bind.hpp>
 #include "client.h"
 
-// TODO: extend to connect to a list of servers
 Client::Client (std::string filename,
                 std::string pattern,
                 boost::asio::io_service& io_service, 
@@ -10,9 +9,15 @@ Client::Client (std::string filename,
   : filename_(filename), pattern_(pattern),
     io_service_(io_service), socket_(io_service) {
     
-  // boost::system::error_code error;
-  // boost::asio::connect(socket_, endpoint_iterator);
-  // handle_connect(error);
+  boost::asio::async_connect(socket_, endpoint_iterator,
+      boost::bind(&Client::handle_connect, this,
+        boost::asio::placeholders::error));
+}
+
+Client::Client (Query query,
+                boost::asio::io_service& io_service, 
+                tcp::resolver::iterator endpoint_iterator)
+  : query_(query), io_service_(io_service), socket_(io_service) {
     
   boost::asio::async_connect(socket_, endpoint_iterator,
       boost::bind(&Client::handle_connect, this,
@@ -30,6 +35,7 @@ void Client::handle_connect(const boost::system::error_code& error)
 
     Message msg(pattern_);
     
+    socket
     boost::asio::async_write(socket_,
         boost::asio::buffer(msg.data(), msg.length()),
         boost::bind(&Client::handle_read, this,

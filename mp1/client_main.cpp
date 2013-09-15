@@ -83,6 +83,7 @@ int main(int argc, char *argv[]) {
       return 1;
     }
 
+    // create connections to each servers
     boost::asio::io_service io_service;
     tcp::resolver resolver(io_service);
     vector<ClientPtr> clients;

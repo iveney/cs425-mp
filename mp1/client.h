@@ -6,12 +6,17 @@
 using boost::asio::ip::tcp;
 
 #include "message.h"
+#include "query.h"
 
 class Client {
 public:
   enum { MAX_LENGTH = 8192 };
   Client (std::string filename,
           std::string pattern,
+          boost::asio::io_service& io_service, 
+          tcp::resolver::iterator endpoint_iterator);
+
+  Client (Query query,
           boost::asio::io_service& io_service, 
           tcp::resolver::iterator endpoint_iterator);
 
@@ -26,6 +31,7 @@ private:
 
   std::string filename_;
   std::string pattern_;
+  Query query_;
   Message result_;
 
   boost::asio::io_service& io_service_;

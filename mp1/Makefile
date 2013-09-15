@@ -22,7 +22,7 @@ ODIR=obj
 SRC=message.cpp
 
 SERVER_SRC=$(SRC)
-SERVER_SRC+=server_main.cpp server.cpp tcp_connection.cpp
+SERVER_SRC+=server_main.cpp server.cpp
 SERVER_HDR=$(SERVER_SRC:.cpp=.h)
 _SERVER_OBJ=$(SERVER_SRC:.cpp=.o) 
 SERVER_OBJ=$(_SERVER_OBJ:%=$(ODIR)/%)
