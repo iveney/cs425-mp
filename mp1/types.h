@@ -11,6 +11,8 @@ class Message;
 class Client;
 typedef boost::shared_ptr<Client> ClientPtr;
 
+struct Query;
+
 #endif /* end of include guard: _TYPES_H_ */
 
 

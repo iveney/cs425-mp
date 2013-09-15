@@ -60,22 +60,3 @@ void TcpConnection::handle_read_body(const boost::system::error_code& error) {
   }
 }
 
-std::string TcpConnection::do_grep(const std::string& pattern) {
-  std::string command;
-  command = "grep " + pattern + " logs/basic/`hostname`";
-  FILE *pipe = popen(command.c_str(), "r");
-  if (!pipe) {
-    std::cerr << "Error opening file\n";
-    return "Error";
-  }
-
-  // read in all the outputs into buffer
-  char buffer[128];
-  std::string result = "";
-  while(!feof(pipe)) {
-    	if(fgets(buffer, 128, pipe) != NULL)
-    		result += buffer;
-  }
-
-  return result;
-}

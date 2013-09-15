@@ -7,19 +7,24 @@
 //
 
 #include <boost/asio.hpp>
-using boost::asio::ip::tcp;
-
+#include <string>
 #include "types.h"
+
+using boost::asio::ip::tcp;
 
 class Server {
 public:
   enum {LISTEN_PORT = 12345};
-  Server(boost::asio::io_service& io_service);
+ Server(boost::asio::io_service& io_service);
 
 private:
   void start_accept();
   void handle_accept(TcpConnPtr new_connection,
       const boost::system::error_code& error);
+  void handle_read(TcpConnPtr conn, const Query& query,
+      const boost::system::error_code& e);
+  std::string do_grep(const Query& query);
+  void handle_write(TcpConnPtr conn, const boost::system::error_code& e);
 
   tcp::acceptor acceptor_;
 };
