@@ -47,9 +47,15 @@ UNITTEST_OBJ=$(_UNITTEST_OBJ:%=$(ODIR)/%)
 UNITTEST_OBJ_G=$(UNITTEST_OBJ:.o=.o-g)
 UNITTEST=unittest
 
+CUSTOM_BOOST=0
+ifeq "$(CUSTOM_BOOST)" "1"
+CPPFLAGS=-Iboost/include
+LDFLAGS=-Lboost/lib
+endif
+
 CFLAGS=
-CPPFLAGS=
-LDFLAGS=-lboost_system-mt -lboost_program_options-mt -lboost_serialization-mt -lpthread
+LDFLAGS+=-lboost_system -lboost_program_options \
+				 -lboost_serialization -lpthread
 
 BINS=$(SERVER) $(CLIENT)
 DBGS=$(BINS:%=%-g)
