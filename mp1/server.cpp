@@ -4,10 +4,12 @@
 #include <boost/serialization/vector.hpp>
 #include "query.hpp"
 using std::string;
+using std::cout;
+using std::endl;
 
 Server::Server(boost::asio::io_service& io_service)
           : acceptor_(io_service, tcp::endpoint(tcp::v4(), Server::LISTEN_PORT)) {
-  std::cout << "Listening on port " << LISTEN_PORT << std::endl;
+  cout << "Listening on port " << LISTEN_PORT << endl;
   start_accept();
 }
 
@@ -28,32 +30,32 @@ void Server::handle_accept(TcpConnPtr connection,
     tcp::endpoint endpoint = connection->socket().remote_endpoint();
     boost::asio::ip::address addr = endpoint.address();
     unsigned short port = endpoint.port();
-    std::cout << "Connected: " << addr << ":" << port << std::endl;
+    cout << "Connected: " << addr << ":" << port << endl;
 
     // Successfully established connection. Start operation to read the query
-    Query query;
-    connection->async_read(query,
+    QueryPtr query(new Query());
+    connection->async_read(*query,
         boost::bind(&Server::handle_read, this,
           connection, query,
           boost::asio::placeholders::error));
   } else {
-    std::cerr << "[handle_accept] " << error.message() << std::endl;
+    std::cerr << "[handle_accept] " << error.message() << endl;
   }
 
   // go back to accept new queries
   start_accept();
 }
 
-void Server::handle_read(TcpConnPtr conn, const Query& query,
+void Server::handle_read(TcpConnPtr conn, QueryPtr query,
     const boost::system::error_code& e) {
   if (!e) {
     // now we have the pattern, do the grep
-    std::cout << "Type: " << query.type_string();
-    std::cout << "Pattern: " << query.pattern_;
-    std::cout << " Filename: " << query.filename_;
-    std::cout << "\n";
+    cout << "Type: " << query->type_string();
+    cout << " Pattern: " << query->pattern_;
+    cout << " Filename: " << query->filename_;
+    cout << "\n";
 
-    string result = do_grep(query);
+    string result = do_grep(*query);
 
     conn->async_write(result,
         boost::bind(&Server::handle_write, this, conn,
@@ -61,9 +63,9 @@ void Server::handle_read(TcpConnPtr conn, const Query& query,
     // when there are more cases, use switch:
     // http://stackoverflow.com/a/9225181/577704
   } else if (e.value() == boost::asio::error::eof) {
-      std::cout << "Connection closed by peer.\n";
+      cout << "Connection closed by peer.\n";
   } else {
-    std::cerr << "[handle_read] " << e.message() << std::endl;
+    std::cerr << "[handle_read] " << e.message() << endl;
   }
 
 }

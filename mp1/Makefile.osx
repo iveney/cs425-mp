@@ -19,7 +19,7 @@ endif
 ODIR=obj
 
 # shared source files
-SRC=message.cpp
+SRC=query.cpp
 
 SERVER_SRC=$(SRC)
 SERVER_SRC+=server_main.cpp server.cpp

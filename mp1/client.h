@@ -1,13 +1,11 @@
 #ifndef _CLIENT_H_
 #define _CLIENT_H_
 
-#include <string>
 #include <boost/asio.hpp>
-using boost::asio::ip::tcp;
-
-#include "message.h"
+#include <string>
 #include "query.hpp"
 #include "types.h"
+using boost::asio::ip::tcp;
 
 class Client {
 public:
@@ -23,14 +21,11 @@ private:
   void handle_connect(const boost::system::error_code& error);
   void handle_write(const boost::system::error_code& error);
   void handle_read(const boost::system::error_code& error);
-  // void handle_read_header(const boost::system::error_code& error);
-  // void handle_read_body(const boost::system::error_code& error);
 
   Query query_;
   std::string result_;
 
   TcpConnPtr connection_; // connection to server
-  // tcp::socket socket_;
 };
 
 #endif /* end of include guard: _CLIENT_H_ */

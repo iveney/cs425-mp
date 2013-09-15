@@ -12,6 +12,7 @@
 #include <vector>
 #include <sstream>
 #include <iomanip>
+#include <iostream>
 #include "types.h"
 
 using boost::asio::ip::tcp;
@@ -128,6 +129,8 @@ public:
         std::istringstream archive_stream(archive_data);
         boost::archive::text_iarchive archive(archive_stream);
         archive >> t;
+        // std::cout << "read data is " << t << std::endl;
+        // std::cout << "object in read_data: " << &t;
       }
       catch (std::exception& e)
       {
@@ -144,12 +147,10 @@ public:
 
   void do_close() {socket_.close();}
 
-private:
+// private:
   TcpConnection(boost::asio::io_service& io_service)
     : socket_(io_service) {
   }
-
-  //std::string do_grep(const std::string& pattern); 
 
   tcp::socket socket_;
 

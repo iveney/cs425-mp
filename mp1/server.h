@@ -21,7 +21,7 @@ private:
   void start_accept();
   void handle_accept(TcpConnPtr new_connection,
       const boost::system::error_code& error);
-  void handle_read(TcpConnPtr conn, const Query& query,
+  void handle_read(TcpConnPtr conn, QueryPtr query,
       const boost::system::error_code& e);
   std::string do_grep(const Query& query);
   void handle_write(TcpConnPtr conn, const boost::system::error_code& e);
