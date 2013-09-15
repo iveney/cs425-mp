@@ -6,7 +6,7 @@
 using boost::asio::ip::tcp;
 
 #include "message.h"
-#include "query.h"
+#include "query.hpp"
 
 class Client {
 public:

@@ -6,7 +6,7 @@ Client::Client (std::string filename,
                 std::string pattern,
                 boost::asio::io_service& io_service, 
                 tcp::resolver::iterator endpoint_iterator)
-  : filename_(filename), pattern_(pattern),
+  : filename_(filename), pattern_(pattern), query_(Query::KEY, pattern, filename),
     io_service_(io_service), socket_(io_service) {
     
   boost::asio::async_connect(socket_, endpoint_iterator,
@@ -35,7 +35,6 @@ void Client::handle_connect(const boost::system::error_code& error)
 
     Message msg(pattern_);
     
-    socket
     boost::asio::async_write(socket_,
         boost::asio::buffer(msg.data(), msg.length()),
         boost::bind(&Client::handle_read, this,
