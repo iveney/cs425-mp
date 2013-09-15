@@ -48,9 +48,10 @@ UNITTEST_OBJ_G=$(UNITTEST_OBJ:.o=.o-g)
 UNITTEST=unittest
 
 CUSTOM_BOOST=0
+BOOST_ROOT=./boost
 ifeq "$(CUSTOM_BOOST)" "1"
-CPPFLAGS=-Iboost/include
-LDFLAGS=-Lboost/lib
+CPPFLAGS=-I$(BOOST_ROOT)/include
+LDFLAGS=-L$(BOOST_ROOT)/lib
 endif
 
 CFLAGS=
