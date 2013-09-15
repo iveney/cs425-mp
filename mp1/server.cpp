@@ -50,10 +50,7 @@ void Server::handle_read(TcpConnPtr conn, QueryPtr query,
     const boost::system::error_code& e) {
   if (!e) {
     // now we have the pattern, do the grep
-    cout << "Type: " << query->type_string();
-    cout << " Pattern: " << query->pattern_;
-    cout << " Filename: " << query->filename_;
-    cout << "\n";
+    cout << *query << endl;
 
     string result = do_grep(*query);
 
