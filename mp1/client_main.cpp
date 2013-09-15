@@ -85,7 +85,6 @@ int main(int argc, char *argv[]) {
 
     // create connections to each servers
     boost::asio::io_service io_service;
-    tcp::resolver resolver(io_service);
     vector<ClientPtr> clients;
 
     const vector<string>& hosts = nparser.hosts();
@@ -95,9 +94,8 @@ int main(int argc, char *argv[]) {
       cout << filename << " @ " << hostname << endl;
 
       Query send_query(query_type, pattern, filename);
-      tcp::resolver::query query(hostname.c_str(), port);
-      tcp::resolver::iterator iterator = resolver.resolve(query);
-      clients.push_back(ClientPtr(new Client(send_query, io_service, iterator)));
+      clients.push_back(
+          ClientPtr(new Client(send_query, hostname, port, io_service)));
     }
 
     io_service.run();
@@ -111,7 +109,7 @@ int main(int argc, char *argv[]) {
     cout << desc;
     return 0;
   } catch (std::exception& e) {
-    std::cerr << e.what() << std::endl;
+    std::cerr << "[Main] " << e.what() << std::endl;
     return 1;
   }
   return 0;

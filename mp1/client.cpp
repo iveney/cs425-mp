@@ -4,16 +4,24 @@
 #include "tcp_connection.hpp"
 #include "query.h"
 #include "client.h"
+#include "timer.hpp"
 using std::cout;
 using std::endl;
 
 Client::Client (Query query,
-                boost::asio::io_service& io_service, 
-                tcp::resolver::iterator endpoint_iterator)
-  : query_(query) {
-    
-  connection_ = TcpConnection::create(io_service);
-  boost::asio::async_connect(connection_->socket(), endpoint_iterator,
+                const std::string& hostname,
+                const std::string& port,
+                boost::asio::io_service& io_service)
+  : query_(query), io_service_(io_service), trial_(0) {
+  tcp::resolver resolver(io_service);
+  tcp::resolver::query resolve_query(hostname.c_str(), port);
+  endpoint_it_ = resolver.resolve(resolve_query);
+  do_connect();
+}
+
+void Client::do_connect() {
+  connection_ = TcpConnection::create(io_service_);
+  boost::asio::async_connect(connection_->socket(), endpoint_it_,
       boost::bind(&Client::handle_connect, this,
         boost::asio::placeholders::error));
 }
@@ -22,11 +30,6 @@ Client::Client (Query query,
 void Client::handle_connect(const boost::system::error_code& error)
 {
   if (!error) {
-    tcp::endpoint endpoint = connection_->socket().remote_endpoint();
-    boost::asio::ip::address addr = endpoint.address();
-    unsigned short port = endpoint.port();
-    cout << "Connected: " << addr << ":" << port << endl;
-
     connection_->async_write(query_, 
         boost::bind(&Client::handle_write, this,
           boost::asio::placeholders::error));
@@ -43,8 +46,20 @@ void Client::handle_write(const boost::system::error_code& error) {
         boost::bind(&Client::handle_read, this,
           boost::asio::placeholders::error));
   } else {
-    cout << "[handle_write] " << error.message() << endl;
     connection_->do_close();
+
+    if (trial_ >= 3) {
+      cout << trial_ << " : Already reached maximum trials.\n";
+      return;
+    }
+
+    // wait 5 seconds and reconnect
+    time_t_timer timer(io_service_);
+    timer.expires_from_now(5);
+    cout << "Wait to retry: " << ++trial_ << " attempts\n";
+    timer.wait();
+    cout << "reconnecting ...\n";
+    do_connect();
   }
 }
 
