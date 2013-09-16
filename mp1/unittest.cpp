@@ -25,21 +25,11 @@ class GrepTest : public ::testing::Test {
     null_.open("/dev/null");
   }
 
-  virtual ~GrepTest() {
-    // You can do clean-up work that doesn't throw exceptions here.
-  }
-
-  // If the constructor and destructor are not enough for setting up
-  // and cleaning up each test, you can define the following methods:
-
-  virtual void SetUp() {
-    // Code here will be called immediately after the constructor (right
-    // before each test).
-  }
-
-  virtual void TearDown() {
-    // Code here will be called immediately after each test (right
-    // before the destructor).
+  string file_as_string(string filename) {
+    ifstream ifs(filename.c_str());
+    stringstream gold;
+    gold << ifs.rdbuf();
+    return gold.str();
   }
 
   // Objects declared here can be used by all tests in the test case for Foo.
@@ -69,14 +59,13 @@ TEST_F(GrepTest, GrepKeyTest) {
   string prefix = golden_ + "/GrepKeyTest";
   string f1 = prefix + "/1";
   string f2 = prefix + "/2";
-  ifstream ifs1(f1.c_str()), ifs2(f2.c_str());
-  stringstream gold[2];
-  gold[0] << ifs1.rdbuf();
-  gold[1] << ifs2.rdbuf();
+  string gold[2];
+  gold[0] = file_as_string(f1);
+  gold[1] = file_as_string(f2);
 
   // compare with golden
-  EXPECT_EQ(clients[0]->result(), gold[0].str());
-  EXPECT_EQ(clients[1]->result(), gold[1].str());
+  EXPECT_EQ(clients[0]->result(), gold[0]);
+  EXPECT_EQ(clients[1]->result(), gold[1]);
 }
 
 } // namespace
