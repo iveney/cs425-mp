@@ -93,9 +93,9 @@ int main(int argc, char *argv[]) {
       const string& filename = filenames[i];
       cout << filename << " @ " << hostname << endl;
 
-      Query send_query(query_type, pattern, filename);
+      Query query(query_type, pattern, filename);
       clients.push_back(
-          ClientPtr(new Client(send_query, hostname, port, io_service)));
+          ClientPtr(new Client(query, hostname, port, io_service)));
     }
 
     io_service.run();

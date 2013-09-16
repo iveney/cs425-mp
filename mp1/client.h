@@ -3,6 +3,7 @@
 
 #include <boost/asio.hpp>
 #include <string>
+#include <iostream>
 #include "query.h"
 #include "types.h"
 using boost::asio::ip::tcp;
@@ -12,10 +13,11 @@ public:
   Client (Query query,
           const std::string& hostname,
           const std::string& port,
-          boost::asio::io_service& io_service); 
+          boost::asio::io_service& io_service,
+          std::ostream& os = std::cout); 
 
   void close();
-  const std::string& result() const;
+  const std::string& result() const {return result_;}
 
 private:
   enum {WAIT_TIME = 5};
@@ -34,6 +36,7 @@ private:
   boost::asio::io_service& io_service_;
 
   int trial_;
+  std::ostream& os_;
 };
 
 #endif /* end of include guard: _CLIENT_H_ */

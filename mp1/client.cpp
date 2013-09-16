@@ -11,8 +11,9 @@ using std::endl;
 Client::Client (Query query,
                 const std::string& hostname,
                 const std::string& port,
-                boost::asio::io_service& io_service)
-  : query_(query), io_service_(io_service), trial_(0) {
+                boost::asio::io_service& io_service,
+                std::ostream& os)
+  : query_(query), io_service_(io_service), trial_(0), os_(os) {
   tcp::resolver resolver(io_service);
   tcp::resolver::query resolve_query(hostname.c_str(), port);
   endpoint_it_ = resolver.resolve(resolve_query);
@@ -54,8 +55,8 @@ void Client::handle_write(const boost::system::error_code& error) {
 void Client::handle_read(const boost::system::error_code& error) {
   if (!error) {
     // print out the result and close connection
-    cout << query_.filename_ << ":\n";
-    cout << result_ << "\n";
+    os_ << query_.filename_ << ":\n";
+    os_ << result_ << "\n";
 
     connection_->do_close();
   } else {
