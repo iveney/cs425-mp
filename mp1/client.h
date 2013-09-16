@@ -15,6 +15,7 @@ public:
           boost::asio::io_service& io_service); 
 
   void close();
+  const std::string& result() const;
 
 private:
   enum {WAIT_TIME = 5};

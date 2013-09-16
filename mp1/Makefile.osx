@@ -57,11 +57,12 @@ endif
 CFLAGS=
 LDFLAGS+=-lboost_system -lboost_program_options \
 				 -lboost_serialization -lpthread
+TEST_LDFLAGS=$(LDFLAGS) -L$(GTEST)/lib -lgtest -lgtest_main
 
 BINS=$(SERVER) $(CLIENT)
 DBGS=$(BINS:%=%-g)
 
-all:dir opt dbg
+all:dir opt unittest
 
 dir:
 	@mkdir -p obj
@@ -84,11 +85,14 @@ dgrep:$(CLIENT_OBJ)
 dgrep-g:$(CLIENT_OBJ_G)
 	$(CC) $(LDFLAGS) -o $(CLIENT)-g $(CLIENT_OBJ_G)
 
+$(ODIR)/unittest.o:unittest.cpp
+	$(CC) $(CXXFLAGS) $(CPPFLAGS) -I$(GTEST_INCLUDE) -c $< -o $@
+
 unittest:$(UNITTEST_OBJ)
-	$(CC) $(LDFLAGS) -o $(UNITTEST) $(UNITTEST_OBJ)
+	$(CC) $(TEST_LDFLAGS) -o $(UNITTEST) $(UNITTEST_OBJ)
 
 unittest-g:$(UNITTEST_OBJ_G)
-	$(CC) $(LDFLAGS) -o $(UNITTEST)-g $(UNITTEST_OBJ_G)
+	$(CC) $(TEST_LDFLAGS) -o $(UNITTEST)-g $(UNITTEST_OBJ_G)
 
 $(ODIR)/%.o: %.cpp %.h
 	$(CC) $(CXXFLAGS) $(CPPFLAGS) -c $<  -o $@
@@ -102,4 +106,4 @@ clean: ALL_OBJS=$(_ALL_OBJS) $(_ALL_OBJS:%.o=%.o-g)
 clean: ALL_BINS=$(BINS) $(BINS:%=%-g)
 clean:
 	@echo "Cleaning all..."
-	rm -rf *.o $(ALL_OBJS) $(ALL_BINS)
+	rm -rf *.o $(ALL_OBJS) $(ALL_BINS) cscope.* tags
