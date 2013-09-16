@@ -20,9 +20,9 @@ boost/
 
 before executing the binary, please do the following:
 
-  export LD_LIBRARY_PATH=boost/lib
+  export LD_LIBRARY_PATH=boost/lib:gtest-1.6.0/lib
 
-to let the loader find the custom built boost libraries.
+to let the loader find the custom built boost libraries and google test.
 
 Running the server
 ------------------
