@@ -47,19 +47,7 @@ void Client::handle_write(const boost::system::error_code& error) {
           boost::asio::placeholders::error));
   } else {
     connection_->do_close();
-
-    if (trial_ >= MAX_TRIAL) {
-      cout << "Already reached maximum trials (" << MAX_TRIAL << ").\n";
-      return;
-    }
-
-    // wait 5 seconds and reconnect
-    time_t_timer timer(io_service_);
-    timer.expires_from_now(WAIT_TIME);
-    cout << "Wait " << WAIT_TIME << "s to retry: " << ++trial_ << " attempts.\n";
-    timer.wait();
-    cout << "Reconnecting ...\n";
-    do_connect();
+    retry();
   }
 }
 
@@ -71,8 +59,22 @@ void Client::handle_read(const boost::system::error_code& error) {
 
     connection_->do_close();
   } else {
-    cout << "[handle_read] " << error.message() << endl;
     connection_->do_close();
+    retry();
   }
 }
 
+void Client::retry() {
+  if (trial_ >= MAX_TRIAL) {
+    cout << "Already reached maximum trials (" << MAX_TRIAL << ").\n";
+    return;
+  }
+
+  // wait 5 seconds and reconnect
+  time_t_timer timer(io_service_);
+  timer.expires_from_now(WAIT_TIME);
+  cout << "Wait " << WAIT_TIME << "s to retry: " << ++trial_ << " attempts.\n";
+  timer.wait();
+  cout << "Reconnecting ...\n";
+  do_connect();
+}
