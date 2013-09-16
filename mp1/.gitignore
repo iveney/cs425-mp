@@ -3,3 +3,6 @@ dgrepd-g
 dgrep
 dgrep-g
 obj
+unittest
+logs/run
+gtest-1.6.0
