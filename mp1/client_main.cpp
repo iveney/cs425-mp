@@ -51,8 +51,11 @@ int main(int argc, char *argv[]) {
 
   try {
     po::variables_map vm;
-    po::store(po::command_line_parser(argc, argv).
-        options(cmd_opts).positional(p).run(), vm);
+    po::parsed_options parsed = po::command_line_parser(argc, argv).
+        options(cmd_opts).allow_unregistered().positional(p).run();
+    po::store(parsed, vm);
+    vector<string> to_pass_further = po::collect_unrecognized(parsed.options,
+        po::exclude_positional);
     po::notify(vm);
 
     if (vm.count("help")) {
