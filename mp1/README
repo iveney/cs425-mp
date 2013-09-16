@@ -35,4 +35,8 @@ Edit config for the server mappings. The following is an example:
 
     ./dgrep -p "pattern" machine.1.log machine.2.log machine.3.log
 
-Currently, the server assumes the log file locates at the 'log/run' dir under server running path.
+Currently, the server assumes the log file locates at the 'log/run' dir under server running path, i.e., each server sees:
+
+    $SERVER_ROOT/log/run/machine.i.log
+
+where i is the server id. Note that there might be multiple dirs under log/, e.g., log/unittest etc. The purpose is to conveniently symlink different set of logs to log/run such that we can perform different tasks (performance, extra credit, development etc.)
