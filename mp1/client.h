@@ -30,6 +30,7 @@ private:
 
   Query query_;
   std::string result_;
+  std::string hostname_;
 
   TcpConnPtr connection_; // connection to server
   tcp::resolver::iterator endpoint_it_;

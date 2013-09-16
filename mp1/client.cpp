@@ -13,7 +13,7 @@ Client::Client (Query query,
                 const std::string& port,
                 boost::asio::io_service& io_service,
                 std::ostream& os)
-  : query_(query), io_service_(io_service), trial_(0), os_(os) {
+  : query_(query), hostname_(hostname), io_service_(io_service), trial_(0), os_(os) {
   tcp::resolver resolver(io_service);
   tcp::resolver::query resolve_query(hostname.c_str(), port);
   endpoint_it_ = resolver.resolve(resolve_query);
@@ -66,6 +66,7 @@ void Client::handle_read(const boost::system::error_code& error) {
 }
 
 void Client::retry() {
+  os_ << "Connection to " << hostname_ << " failed. \n";
   if (trial_ >= MAX_TRIAL) {
     cout << "Already reached maximum trials (" << MAX_TRIAL << ").\n";
     return;
@@ -74,8 +75,7 @@ void Client::retry() {
   // wait 5 seconds and reconnect
   time_t_timer timer(io_service_);
   timer.expires_from_now(WAIT_TIME);
-  cout << "Wait " << WAIT_TIME << "s to retry: " << ++trial_ << " attempts.\n";
+  os_ << "Wait " << WAIT_TIME << "s to retry: " << ++trial_ << " attempts.\n";
   timer.wait();
-  cout << "Reconnecting ...\n";
   do_connect();
 }
