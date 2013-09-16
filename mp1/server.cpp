@@ -85,7 +85,7 @@ string Server::do_grep(const Query& query) {
       break;
   }
   char cmd[1024];
-  sprintf(cmd, "awk -F '%c' '%s/%s/' %s",
+  sprintf(cmd, "awk -F '%c' '%s/%s/' %s 2>&1",
                 delimiter, reg.c_str(), query.pattern_.c_str(), fullpath.c_str());
   FILE *pipe = popen(cmd, "r");
   if (!pipe) {
@@ -94,10 +94,10 @@ string Server::do_grep(const Query& query) {
   }
 
   // read in all the outputs into buffer
-  char buffer[128];
+  char buffer[1024];
   string result = "";
   while(!feof(pipe)) {
-    	if(fgets(buffer, 128, pipe) != NULL)
+    	if(fgets(buffer, 1024, pipe) != NULL)
     		result += buffer;
   }
 
