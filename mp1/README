@@ -8,6 +8,8 @@ By default the compiler is clang++. Use the following to specify g++ and custom 
 
   make CC=g++ CUSTOM_BOOST=1 
 
+Boost and Gtest have been pre-compiled under EWS environement.
+Extract boost.tar.gz and gtest.tar.gz to the source directory.
 The makefile assumes the custom boost library is under the project root.
 
 How to run
