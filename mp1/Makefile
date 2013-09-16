@@ -40,7 +40,7 @@ CLIENT=dgrep
 GTEST=gtest-1.6.0
 GTEST_INCLUDE=$(GTEST)/include
 UNITTEST_SRC=$(SRC)
-UNITTEST_SRC+=unittest.cpp
+UNITTEST_SRC+=unittest.cpp name_parser.cpp client.cpp
 UNITTEST_HDR=$(UNITTEST_SRC:.cpp=.h)
 _UNITTEST_OBJ=$(UNITTEST_SRC:.cpp=.o)
 UNITTEST_OBJ=$(_UNITTEST_OBJ:%=$(ODIR)/%)
