@@ -69,7 +69,7 @@ void Server::handle_read(TcpConnPtr conn, QueryPtr query,
 
 string Server::do_grep(const Query& query) {
   // TODO: specify base and delimiter in query
-  static const char* base = "./logs/provided";
+  static const char* base = "./logs/run";
   static const char delimiter = ':';
   string fullpath(base);
   fullpath += "/" + query.filename_;
