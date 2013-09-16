@@ -65,8 +65,8 @@ TEST_F(GrepTest, GrepKeyTest) {
   gold[1] = file_as_string(f2);
 
   // compare with golden
-  EXPECT_EQ(clients[0]->result(), gold[0]);
-  EXPECT_EQ(clients[1]->result(), gold[1]);
+  EXPECT_EQ(gold[0], clients[0]->result());
+  EXPECT_EQ(gold[1], clients[1]->result());
 }
 
 TEST_F(GrepTest, GrepValueTest) {
@@ -93,8 +93,8 @@ TEST_F(GrepTest, GrepValueTest) {
   gold[1] = file_as_string(f2);
 
   // compare with golden
-  EXPECT_EQ(clients[0]->result(), gold[0]);
-  EXPECT_EQ(clients[1]->result(), gold[1]);
+  EXPECT_EQ(gold[0], clients[0]->result());
+  EXPECT_EQ(gold[1], clients[1]->result());
 }
 
 TEST_F(GrepTest, GrepRareTest) {
@@ -121,8 +121,8 @@ TEST_F(GrepTest, GrepRareTest) {
   gold[1] = file_as_string(f2);
 
   // compare with golden
-  EXPECT_EQ(clients[0]->result(), gold[0]);
-  EXPECT_EQ(clients[1]->result(), gold[1]);
+  EXPECT_EQ(gold[0], clients[0]->result());
+  EXPECT_EQ(gold[1], clients[1]->result());
 }
 
 // This pattern only occurs in one file. Grep from four servers
