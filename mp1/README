@@ -23,3 +23,14 @@ before executing the binary, please do the following:
   export LD_LIBRARY_PATH=boost/lib
 
 to let the loader find the custom built boost libraries.
+
+Running the server
+------------------
+
+    ./dgrepd
+
+Running the client
+------------------
+Edit config for the server mappings. The following is an example:
+
+    ./dgrep -p "pattern" machine.1.log machine.2.log machine.3.log
