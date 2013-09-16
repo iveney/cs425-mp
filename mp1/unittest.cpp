@@ -151,4 +151,30 @@ TEST_F(GrepTest, GrepOneTest) {
   }
 }
 
+// This pattern only occurs in two files. Grep from four servers
+TEST_F(GrepTest, GrepSomeTest) {
+  string value = "the unique value in"; // 1, 2 both have this string
+  ClientPtr clients[5];
+  boost::asio::io_service io_service;
+  string prefix = golden_ + "/GrepSomeTest";
+  string gold[5];
+
+  for (int i = 1; i <= 4; ++i) {
+    string filename;
+    filename = "machine." + to_string(i) + ".log";
+    Query query(Query::VALUE, value, filename);
+    clients[i] = ClientPtr(new Client(query, hosts_[i], port_, io_service, null_));
+
+    string f = prefix + "/" + to_string(i);
+    gold[i] = file_as_string(f);
+  }
+
+  io_service.run();
+
+  // compare with golden
+  for (int i = 1; i <= 4; ++i) {
+    EXPECT_EQ(gold[i], clients[i]->result());
+  }
+}
+
 } // namespace
