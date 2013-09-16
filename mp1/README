@@ -40,3 +40,7 @@ Currently, the server assumes the log file locates at the 'log/run' dir under se
     $SERVER_ROOT/log/run/machine.i.log
 
 where i is the server id. Note that there might be multiple dirs under log/, e.g., log/unittest etc. The purpose is to conveniently symlink different set of logs to log/run such that we can perform different tasks (performance, extra credit, development etc.)
+
+Running the unittest
+--------------------
+Make sure the servers are up and logs/run links to logs/provided, which contains the files from the course website.
