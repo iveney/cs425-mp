@@ -9,8 +9,12 @@ By default the compiler is clang++. Use the following to specify g++ and custom 
   make CC=g++ CUSTOM_BOOST=1 
 
 Boost and Gtest have been pre-compiled under EWS environement.
-Extract boost.tar.gz and gtest.tar.gz to the source directory.
-The makefile assumes the custom boost library is under the project root.
+Due to there size, it is not included in the handin. Please find them at:
+
+- [boost.zip](https://www.dropbox.com/s/sm6chgwwxdmrtay/boost.zip)
+- [gtest-1.6.0.zip](https://www.dropbox.com/s/oc9awprkio3mikp/gtest-1.6.0.zip)
+
+The makefile assumes the custom boost library and gtest are under the project root.  So please extract boost.zip and gtest.zip to the source directory.
 
 How to run
 ----------
@@ -35,7 +39,7 @@ Running the client
 ------------------
 Edit config for the server mappings. The following is an example:
 
-    ./dgrep -p "pattern" machine.1.log machine.2.log machine.3.log
+    ./dgrep -t key -p "pattern" machine.1.log machine.2.log machine.3.log
 
 Currently, the server assumes the log file locates at the 'log/run' dir under server running path, i.e., each server sees:
 
